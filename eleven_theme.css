@@ -1,0 +1,118 @@
+:root{
+    /* ---- Eleven Dark (Forest) Theme ---- */
+    --bg-0: #0B2B1E;
+    --bg-1: #0F3A28;
+    --bg-2: #165E3F;
+
+    --surface: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.16);
+
+    --text: #FFFFFF;
+    --text-muted: rgba(255,255,255,0.78);
+
+    --primary: #333399;
+    --mint: #4FB583;
+    --link: #A3A3E0;
+
+    --input-bg: rgba(0,0,0,0.35);
+    --placeholder: rgba(255,255,255,0.55);
+}
+
+/* -------- App background (gradient like PPT) -------- */
+.stApp{
+    color: var(--text);
+    background:
+      radial-gradient(1100px 600px at 12% 8%, rgba(79,181,131,0.22) 0%, rgba(79,181,131,0.00) 60%),
+      radial-gradient(900px 520px at 88% 18%, rgba(51,51,153,0.18) 0%, rgba(51,51,153,0.00) 55%),
+      linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 48%, var(--bg-2) 100%);
+}
+
+/* Header */
+[data-testid="stHeader"]{
+    background: rgba(11,43,30,0.70);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+/* Global text */
+h1,h2,h3,h4,h5,h6,p,span,div,label{
+    color: var(--text) !important;
+}
+.stCaption *{
+    color: var(--text-muted) !important;
+}
+
+/* Cards */
+div[data-testid="stVerticalBlockBorderWrapper"]{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* Buttons */
+.stButton > button[kind="primary"]{
+    background: var(--primary) !important;
+    color: #fff !important;
+    border-radius: 14px !important;
+    font-weight: 800 !important;
+}
+.stButton > button{
+    background: rgba(255,255,255,0.08) !important;
+    color: #fff !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 14px !important;
+}
+
+/* Inputs */
+.stTextInput input,
+.stNumberInput input,
+.stTextArea textarea{
+    background: var(--input-bg) !important;
+    color: #fff !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+}
+::placeholder{
+    color: var(--placeholder) !important;
+}
+
+/* -------- FIX: Dropdown text invisible -------- */
+[data-baseweb="select"] > div{
+    background: var(--input-bg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+}
+[data-baseweb="select"] *{
+    color: #fff !important;
+}
+
+/* Dropdown menu */
+ul[role="listbox"]{
+    background: rgba(11,43,30,0.96) !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    border-radius: 14px !important;
+}
+ul[role="listbox"] li{
+    color: #fff !important;
+}
+ul[role="listbox"] li:hover{
+    background: rgba(227,227,245,0.16) !important;
+}
+
+/* Icons */
+[data-baseweb="select"] svg{
+    fill: rgba(255,255,255,0.9) !important;
+}
+
+/* Metrics */
+div[data-testid="stMetric"]{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+div[data-testid="stMetric"] *{
+    color: #fff !important;
+}
+
