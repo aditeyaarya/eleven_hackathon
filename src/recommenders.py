@@ -90,7 +90,7 @@ def recommend_similar_products(
 def recommend_for_client(
     client_id: str,
     bundle: dict,
-    top_families: int = 3,
+    top_families: int = 10,
     top_products: int = 10,
     per_family_candidates: int = 50,
 ) -> dict:
@@ -260,6 +260,9 @@ def recommend_for_client(
                         "ProductID": pid,
                         "SimilarityToLastPurchase": float(p.get("sim_to_last", 0.0)),
                         name_col: p.get(name_col, ""),
+                        "Category": p.get("Category", ""),
+                        "Universe": p.get("Universe", ""),
+                        "FamilyLevel1": p.get("FamilyLevel1", ""),
                     })
 
         else:
@@ -284,6 +287,9 @@ def recommend_for_client(
                         "ProductID": pid,
                         "SimilarityToLastPurchase": np.nan,
                         name_col: p.get(name_col, ""),
+                        "Category": p.get("Category", ""),
+                        "Universe": p.get("Universe", ""),
+                        "FamilyLevel1": p.get("FamilyLevel1", ""),
                     })
 
         fam_diag_rows.append({
@@ -297,7 +303,8 @@ def recommend_for_client(
     if not rec_rows:
         recs = pd.DataFrame(columns=[
             "ClientID", "SeedProductID", "FamilyLevel2", "FamilyProb",
-            "ProductID", "SimilarityToLastPurchase", name_col
+            "ProductID", "SimilarityToLastPurchase", name_col,
+            "Category", "Universe", "FamilyLevel1"
         ])
     else:
         recs = pd.DataFrame(rec_rows)
