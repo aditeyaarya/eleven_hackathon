@@ -17,11 +17,7 @@ from .recommenders import (
 # Business-friendly helpers
 # -----------------------------
 
-STRATEGIES = {
-    "Conservative (Repeat-focused)": {"top_families": 2, "per_family_candidates": 40},
-    "Balanced (Recommended)": {"top_families": 3, "per_family_candidates": 80},
-    "Exploratory (Discovery)": {"top_families": 5, "per_family_candidates": 150},
-}
+
 
 
 def _confidence_label(p: float) -> str:
@@ -79,31 +75,26 @@ def _render_recommendation_cards(
 
     for i, row in recs.reset_index(drop=True).iterrows():
         rank = i + 1
-        title = str(row.get(name_col, row.get("ProductID", "")))
-        pid = str(row.get("ProductID", ""))
-
-        fam2 = str(row.get("FamilyLevel2", ""))
-        fam_prob = float(row.get("FamilyProb", np.nan)) if "FamilyProb" in row else np.nan
-        sim = row.get("SimilarityToLastPurchase", np.nan)
+        # Requested change: Display Product Name (FamilyLevel2) instead of ProductID/Name
+        title = str(row.get("FamilyLevel2", ""))
+        
+        # New info for description
+        cat = str(row.get("Category", ""))
+        uni = str(row.get("Universe", ""))
+        fam1 = str(row.get("FamilyLevel1", ""))
+        
+        # Formatting description
+        desc_parts = []
+        if cat: desc_parts.append(f"Category: **{cat}**")
+        if uni: desc_parts.append(f"Universe: **{uni}**")
+        if fam1: desc_parts.append(f"Family: **{fam1}**")
+        description = " • ".join(desc_parts)
 
         with st.container(border=True):
-            c1, c2 = st.columns([3.8, 1.2])  # reclaim space from Match column
-
-            with c1:
-                st.markdown(f"### #{rank} — {title}")
-                st.caption(f"ProductID: {pid}")
-
-                reason = _build_reason(
-                    seed_pid=str(row.get("SeedProductID", "")),
-                    fam2=fam2,
-                    fam_prob=fam_prob if not np.isnan(fam_prob) else 0.0,
-                    sim=sim,
-                )
-                st.markdown(_strip_confidence_from_reason(reason))
-
-            with c2:
-                st.markdown("**Intent**")
-                st.write(fam2 if fam2 else "—")
+            # Use full width since we are removing the Intent column
+            st.markdown(f"### #{rank} — {title}")
+            if description:
+                st.markdown(description)
 
 # -----------------------------
 # Tabs
@@ -145,14 +136,7 @@ def render_tab_client_recommender(bundle: dict) -> None:
                 client_id = st.text_input("Customer (ClientID)", value="", key="client_recommender_client_id_manual")
                 st.caption("clients.csv whitelist not loaded → using manual ClientID input.")
 
-        with c2:
-            strategy = st.selectbox(
-                "Recommendation strategy",
-                options=list(STRATEGIES.keys()),
-                index=1,
-                help="Conservative = repeat-heavy, Balanced = default, Exploratory = more diversity.",
-                key="client_recommender_strategy",
-            )
+
 
         with c3:
             top_products = st.number_input(
@@ -198,9 +182,9 @@ def render_tab_client_recommender(bundle: dict) -> None:
         return
 
     # ---------- Map strategy → parameters ----------
-    strat = STRATEGIES[strategy]
-    top_families = int(strat["top_families"])
-    per_family_candidates = int(strat["per_family_candidates"])
+    # Hardcoded "Balanced" defaults as requested
+    top_families = 10
+    per_family_candidates = 80
 
     # ---------- Compute ----------
     try:
@@ -270,8 +254,7 @@ def render_tab_client_recommender(bundle: dict) -> None:
 
     # ---------- Summary ----------
     s1, s2, s3, s4 = st.columns(4)
-    with s1:
-        st.metric("Strategy", strategy.split(" (")[0])
+
     with s2:
         st.metric("Products shown", len(recs))
     with s3:
